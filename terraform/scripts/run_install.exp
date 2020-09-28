@@ -1,0 +1,25 @@
+#!/usr/bin/expect -f
+set timeout -1
+spawn ./SetupMinecraft.sh
+match_max 100000
+expect "Enter a short one word label for a new or existing server...\r
+It will be used in the folder name and service name...\r
+Server Label: "
+send -- "MyServer\r"
+expect "accept (y/n)?"
+send -- "y\r"
+expect "Enter server IPV4 port (default 19132): \r
+Server IPV4 Port: "
+send -- "19132\r"
+expect "accept (y/n)?"
+send -- "y\r"
+expect "Enter server IPV6 port (default 19133): \r
+Server IPV6 Port: "
+send -- "19133\r"
+expect "accept (y/n)?"
+send -- "y\r"
+expect "Start Minecraft server at startup automatically (y/n)?"
+send -- "y\r"
+expect "Automatically restart and backup server at 4am daily (y/n)?"
+send -- "y\r"
+expect eof
