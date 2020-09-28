@@ -9,24 +9,29 @@ terraform {
 
 provider "aws" {
   profile = "default"
-  region  = "us-west-2"
+  region  = var.region
 }
 
 resource "aws_instance" "server" {
-  ami                         = "ami-09a1e275e350acf38"
-  instance_type               = "t3a.nano"
-  key_name                    = "minecraft"
+  ami                         = var.ami
+  instance_type               = var.instance_type
+  key_name                    = var.key_name
   associate_public_ip_address = true
   vpc_security_group_ids      = [aws_security_group.minecraft.id]
-  user_data                   = "${data.template_file.user_data.rendered}"
+  user_data                   = templatefile(
+    "${path.module}/templates/user_data.tpl",
+    {
+      server_name = var.server_name
+      ipv4_port =var.ipv4_port
+      ipv6_port = var.ipv6_port
+      set_auto_start = var.set_auto_start
+      backups = var.backups
+    }
+  )
 
-  tags {
-    Name = "Minecraft Server"
+  tags = {
+    Name = var.server_name
   }
-}
-
-data "template_file" "user_data" {
-  template = "${file("templates/user_data.tpl")}"
 }
 
 resource "aws_security_group" "minecraft" {
@@ -35,10 +40,18 @@ resource "aws_security_group" "minecraft" {
 
   ingress {
     description = "Minecraft port"
-    from_port   = 19132
-    to_port     = 19132
+    from_port   = var.ipv4_port 
+    to_port     = var.ipv4_port
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.allowed_game_ips
+  }
+
+  ingress {
+    description = "Minecraft port"
+    from_port   = var.ipv4_port
+    to_port     = var.ipv4_port
+    protocol    = "udp"
+    cidr_blocks = var.allowed_game_ips
   }
 
   ingress {
@@ -46,7 +59,7 @@ resource "aws_security_group" "minecraft" {
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    cidr_blocks = var.allowed_ssh_ips
   }
 
   egress {
@@ -57,6 +70,6 @@ resource "aws_security_group" "minecraft" {
   }
 
   tags = {
-    Name = "mincraft_sg"
+    Name = "minecraft_sg"
   }
 }
