@@ -120,7 +120,7 @@ resource "aws_lambda_function" "start_instances_lambda" {
 
 resource "aws_cloudwatch_event_rule" "start" {
   name                = "start"
-  schedule_expression = "cron(0 21 ? * * 5-7)"
+  schedule_expression = "cron(0 17 ? * * 5-7)"
 }
 
 resource "aws_cloudwatch_event_target" "run_start_lambda" {
