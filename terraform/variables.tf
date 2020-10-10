@@ -7,7 +7,7 @@ variable "ami" {
 }
 
 variable "instance_type" {
-  default = "t3a.nano"
+  default = "t3a.micro"
 }
 
 variable "key_name" {
