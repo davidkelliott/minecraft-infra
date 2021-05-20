@@ -1,0 +1,37 @@
+name: "Terraform: Static Analysis"
+
+on:
+  pull_request:
+    paths:
+      - 'terraform/**'
+      - '.github/workflows/terraform-static-code-analysis.yml'
+    branches:
+      - master
+    types: [opened, edited, reopened, synchronize]
+  workflow_dispatch:
+
+defaults:
+  run:
+    shell: bash
+
+jobs:
+  run-tfsec:
+    name: TFSEC Static Analysis
+    runs-on: ubuntu-latest
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - uses: actions/checkout@v2.3.4
+      - uses: davidkelliott/terraform-static-analysis@main
+        with:
+          terraform_working_dir: terraform
+
+# manual-trigger-only:
+#     runs-on: ubuntu-latest
+#     if: github.event_name == 'workflow_dispatch'
+#     steps:
+#       - name: manual-trigger-only
+#         run: echo "manual-trigger-only"
+        
+
+# git diff --no-commit-id --name-only -r @^ | awk '{print $1}' | grep '.tf' | sed 's#/[^/]*$##' | uniq
