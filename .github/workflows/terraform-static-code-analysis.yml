@@ -31,12 +31,20 @@ jobs:
           terraform_working_dir: terraform
           scan_type: single
 
-# manual-trigger-only:
-#     runs-on: ubuntu-latest
-#     if: github.event_name == 'workflow_dispatch'
-#     steps:
-#       - name: manual-trigger-only
-#         run: echo "manual-trigger-only"
-        
+  manual-trigger-only:
+    name: TFSEC & CHECKOV Static Analysis - FULL
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch'
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2.3.4
+        with:
+          fetch-depth: 0
+      - name: Scan
+        uses: davidkelliott/terraform-static-analysis@main
+        with:
+          scan_type: full
 
 # git diff --no-commit-id --name-only -r @^ | awk '{print $1}' | grep '.tf' | sed 's#/[^/]*$##' | uniq
