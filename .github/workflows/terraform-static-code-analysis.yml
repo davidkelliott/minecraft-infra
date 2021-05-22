@@ -29,6 +29,7 @@ jobs:
         uses: davidkelliott/terraform-static-analysis@main
         with:
           terraform_working_dir: terraform
+          scan_type: single
 
 # manual-trigger-only:
 #     runs-on: ubuntu-latest
