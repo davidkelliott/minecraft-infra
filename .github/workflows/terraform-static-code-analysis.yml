@@ -30,6 +30,7 @@ jobs:
         with:
           terraform_working_dir: terraform
           scan_type: full
+          checkov_exclude: CKV_AWS_8,CKV_AWS_135
 
   manual-trigger-only:
     name: TFSEC & CHECKOV Static Analysis - FULL
