@@ -46,5 +46,6 @@ jobs:
         uses: davidkelliott/terraform-static-analysis@main
         with:
           scan_type: full
+          checkov_exclude: CKV_AWS_8,CKV_AWS_135
 
 # git diff --no-commit-id --name-only -r @^ | awk '{print $1}' | grep '.tf' | sed 's#/[^/]*$##' | uniq
